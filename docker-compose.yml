@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql-docker
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todoapp
+    ports:
+      - "3308:3306"
+    networks:
+      - todo-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: backend-docker
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todoapp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8080:8080"
+    networks:
+      - todo-net
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-docker
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://backend:8080
+    ports:
+      - "5173:5173"
+    networks:
+      - todo-net
+
+networks:
+  todo-net:
