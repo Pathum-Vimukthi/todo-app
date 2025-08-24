@@ -82,6 +82,44 @@ containerized using **Docker** and orchestrated via **Docker Compose**.
 
 ---
 
+## **Run Locally (Without Docker)**
+
+### **Start MySQL**
+Ensure you have MySQL running locally with:
+- **Database:** `todoapp`
+- **Username:** `root`
+- **Password:** `root`
+
+Create database:
+```sql
+CREATE DATABASE todoapp;
+```
+
+### **Run Backend**
+```bash
+cd backend
+mvn clean spring-boot:run
+```
+The backend will run at:
+```
+http://localhost:8080
+```
+
+### **Run Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+The frontend will run at:
+```
+http://localhost:5173
+```
+
+**Note:** Ensure the API URL in the frontend points to `http://localhost:8080` during local development.
+
+---
+
 ## **API Endpoints**
 
 ### **Base URL**
